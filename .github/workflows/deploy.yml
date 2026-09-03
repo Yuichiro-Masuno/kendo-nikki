@@ -11,12 +11,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Debug Secret Length
-        run: |
-          echo "SUPABASE_KEY length: ${#SUPABASE_KEY}"
-        env:
-          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-
       - name: Inject Supabase Key
         run: |
           sed -i "s|ここにanon_keyを貼り付けてください|${{ secrets.SUPABASE_KEY }}|g" kendo-nikki.html
