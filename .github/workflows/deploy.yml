@@ -11,6 +11,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Inject Supabase Key
+        run: |
+          sed -i "s|ここにanon_keyを貼り付けてください|${{ secrets.SUPABASE_KEY }}|g" kendo-nikki.html
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:

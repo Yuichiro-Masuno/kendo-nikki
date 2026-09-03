@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>kendokkan</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;600;700;900&family=Noto+Sans+JP:wght@300;400;500&family=IM+Fell+English:ital@1&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
 :root {
   --ink:        #0e0e18;
@@ -191,7 +192,7 @@ header {
 .card-senjin::before    { background: radial-gradient(circle, rgba(200,168,75,0.2), transparent 70%); }
 .card-shinai::before    { background: radial-gradient(circle, rgba(30,80,122,0.25), transparent 70%); }
 .card-shiai::before     { background: radial-gradient(circle, rgba(180,100,30,0.25), transparent 70%); }
-.card-zakkan::before    { background: radial-gradient(circle, rgba(50,110,85,0.25), transparent 70%); }
+.card-zaskan::before    { background: radial-gradient(circle, rgba(50,110,85,0.25), transparent 70%); }
 
 /* カード大型文字背景 */
 .card-bg-char {
@@ -234,7 +235,7 @@ header {
 .card-senjin .card-icon    { background: rgba(200,168,75,0.15); border: 1px solid rgba(200,168,75,0.35); }
 .card-shinai .card-icon    { background: rgba(30,80,122,0.3); border: 1px solid rgba(30,80,122,0.5); }
 .card-shiai .card-icon     { background: rgba(80,40,10,0.4); border: 1px solid rgba(180,100,30,0.5); }
-.card-zakkan .card-icon    { background: rgba(50,110,85,0.25); border: 1px solid rgba(74,138,114,0.45); }
+.card-zaskan .card-icon    { background: rgba(50,110,85,0.25); border: 1px solid rgba(74,138,114,0.45); }
 
 .card-app-name {
   font-size: 0.65rem;
@@ -257,7 +258,7 @@ header {
 .card-senjin .card-title-accent   { color: var(--gold); }
 .card-shinai .card-title-accent   { color: #5a9fd6; }
 .card-shiai .card-title-accent    { color: #d4905a; }
-.card-zakkan .card-title-accent   { color: #4a9a7a; }
+.card-zaskan .card-title-accent   { color: #4a9a7a; }
 
 /* カード説明 */
 .card-desc {
@@ -298,6 +299,67 @@ header {
 .app-card:hover .card-arrow {
   opacity: 1;
   transform: translateX(4px);
+}
+
+/* ── ログインフォーム ── */
+.login-wrap {
+  width: 100%;
+  max-width: 400px;
+  margin-top: 36px;
+  display: none;
+  justify-content: center;
+}
+.login-card {
+  width: 100%;
+  background: var(--ink-mid);
+  border: 1px solid rgba(200,168,75,0.14);
+  border-radius: 12px;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.login-label {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--white);
+  text-align: center;
+  margin-bottom: 8px;
+  letter-spacing: 0.05em;
+}
+.login-input {
+  width: 100%;
+  background: rgba(0,0,0,0.25);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  padding: 11px 14px;
+  font-size: 0.9rem;
+  color: var(--white);
+  font-family: 'Noto Sans JP', sans-serif;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.login-input:focus { border-color: var(--gold); }
+.login-btn {
+  margin-top: 4px;
+  background: var(--gold);
+  color: var(--ink);
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.login-btn:hover { opacity: 0.85; }
+.login-error {
+  color: #d06060;
+  font-size: 0.78rem;
+  text-align: center;
+  display: none;
 }
 
 /* ── フッター ── */
@@ -342,7 +404,17 @@ header {
     </div>
   </header>
 
-  <div class="cards">
+  <div class="login-wrap" id="loginSection">
+    <div class="login-card">
+      <div class="login-label">ログイン</div>
+      <input type="email" id="loginEmail" class="login-input" placeholder="メールアドレス" autocomplete="username">
+      <input type="password" id="loginPassword" class="login-input" placeholder="パスワード" autocomplete="current-password" onkeydown="if(event.key==='Enter') handleLogin()">
+      <button class="login-btn" onclick="handleLogin()">ログイン</button>
+      <div class="login-error" id="loginError"></div>
+    </div>
+  </div>
+
+  <div class="cards" id="cardsSection" style="display:none;">
 
     <!-- keikolog -->
     <a class="app-card card-keikolog" href="https://yuichiro-masuno.github.io/keikolog/keikolog.html" target="_blank">
@@ -393,7 +465,7 @@ header {
     </a>
 
     <!-- zaskanlog -->
-    <a class="app-card card-zakkan" href="https://yuichiro-masuno.github.io/zakkanlog/zakkanlog.html" target="_blank">
+    <a class="app-card card-zaskan" href="https://yuichiro-masuno.github.io/zaskanlog/zaskanlog.html" target="_blank">
       <div class="card-bg-char">感</div>
       <div class="card-icon-wrap">
         <div class="card-icon">📝</div>
@@ -411,5 +483,75 @@ header {
   </footer>
 
 </div>
+
+<script>
+const SUPABASE_URL = 'https://hnkncnqktdftxuupvypp.supabase.co';
+const SUPABASE_KEY = 'ここにanon_keyを貼り付けてください';
+
+let sb = null;
+try {
+  sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+} catch(e) { console.warn('Supabase init failed', e); }
+
+const params = new URLSearchParams(window.location.search);
+const redirectApp = params.get('redirect');
+
+function appUrl(appName) {
+  return `https://yuichiro-masuno.github.io/${appName}/${appName}.html`;
+}
+
+function showCards() {
+  document.getElementById('loginSection').style.display = 'none';
+  document.getElementById('cardsSection').style.display = 'grid';
+}
+
+function showLogin() {
+  document.getElementById('cardsSection').style.display = 'none';
+  document.getElementById('loginSection').style.display = 'flex';
+}
+
+async function checkAuthAndRender() {
+  if (!sb) { showCards(); return; }
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    if (redirectApp) {
+      window.location.replace(appUrl(redirectApp));
+      return;
+    }
+    showCards();
+  } else {
+    showLogin();
+  }
+}
+
+async function handleLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  const errEl = document.getElementById('loginError');
+  errEl.style.display = 'none';
+
+  if (!email || !password) {
+    errEl.textContent = 'メールアドレスとパスワードを入力してください';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+  if (error) {
+    errEl.textContent = 'ログインに失敗しました';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  if (redirectApp) {
+    window.location.replace(appUrl(redirectApp));
+  } else {
+    showCards();
+  }
+}
+
+window.addEventListener('DOMContentLoaded', checkAuthAndRender);
+</script>
+
 </body>
 </html>
